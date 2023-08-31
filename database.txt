@@ -1,0 +1,213 @@
+데이터 베이스 정리
+
+데이터 베이스
+데이터를 저장, 사용하기 위한 메모리 상자를 만들어서 사용해왔다.
+[변수]-[자료구조]-(함수)-(클래스)-(객체구조)-[텍스트 파일]-[csv]-[데이터베이스]
+
+데이터 베이스 모델
+계층형 데이터 베이스 Hierarchical DBMS
+관계형 데이터 베이스 Realtional DBMS #보편적
+객체형 데이터 베이스 Object-Oriented DBMS
+네트워크 데이터 베이스 Network DBMS
+
+RDBMS
+테이블 형태로 구성된 데이터 베이스
+사원 번호  사원 이름  사원 직급  부서 이름  위치
+0001        Adam       대리       개발    서울
+0002        Beny       부장       본부    분당
+0003        Chen       사원       개발    서울
+
+데이터의 독립 특성을 규정해서 데이터 뭈음으로 나눈다.
+사원 번호  사원 이름  사원 직급  부서 코드
+0001        Adam       대리       10
+0002        Beny       부장       20
+0003        Chen       사원       10
+
+부서 코드      부서 이름       위치
+10             개발            서울
+20             본부            분당
+
+동시성, 보안, 성능
+
+장점 : 효율적인 관리, 정확성, 백업 및 복구, 중복된 데이터 처리
+단점 : 데이터를 넣을 때 중복된 데이터 확인
+
+SQL(Structured Query Language) -> RDBMS 사용 언어
+명령어
+DQL(Data Query Language) -> RDBMS 저장한 데이터를 원하는 방시으로 조회하는 명령어
+DML(Data Manipulation Language) -> RDBMS 테이블 데이터를 저장, 수정, 삭제하는 명령어
+DDL(Data Definition LAnguage) -> RDBMS 관리를 위해서 테이블을 포함한 객체들을 생성, 수정, 삭제하는 명령어
+
+관계형 데이터 베이스 : 행과 열의 특성을 맞추어 저장된 테이블
+테이블 : 관계(reletion)
+행 : row, 튜플(tuple), 레코드(record)
+열 : column, 애트리뷰트(attribute), 필드(field)
+
+키 Key -> 수 많은 데이터들을 구별해 줄 값
+
+1. 기본키
+  테이블에 저장된 유일한 값
+  중복된 값이 없어야 함.
+  Null값을 가질 수 없다.
+2. 보조키(대체키 alternate key, 후보키 candidate key)
+  기본키의 조건을 만족하면 기본키가 될 수 있다.
+3. 외래키
+  특정 테이블에 포함되어 있고, 다른 테이블의 기본키로 지정된 키
+4. 복합키
+  여러 열을 조합하여 기본키 역할을 할 수 있게 만든 키
+  사원번호 데이터 손실 -> 사원 이름 + 부서 코드로 복합키 : Adam10 Beny20 Chen10
+
+
+
+
+사원 번호  사원 이름  사원 직급  부서 코드
+0001        Adam       대리       10
+0002        Beny       부장       20
+0003        Chen       사원       10
+
+부서 코드      부서 이름       위치
+10             개발            서울
+20             본부            분당
+
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+EMPNO -> NOT NULL -> 기본키
+     -> NUMBER(4) -> 네자리 숫자
+ENAME -> VARCHAR2(10) -> 10개의 문자
+JOB -> VARCHAR2(9) -> 9개 이하
+MGR -> NUMBER(4) -> 네자리 숫자
+HIREDATE -> DATE -> 날짜 (2019/20/12, 2023-08-29, ...)
+SAL -> NUMER(7,2) -> 7자리 숫자인데, 소수점 2자리 까지
+COMM -> NUMER(7,2)
+DEPTNO -> NUMBER(2) -> 2자리 숫자
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ DEPTNO                                    NOT NULL NUMBER(2)
+ DNAME                                              VARCHAR2(14)
+ LOC                                                VARCHAR2(13)
+DEPTNO -> NOT NULL -> 기본키 -> 2자리 숫자
+DNAME -> VARCHAR2(14) -> 14개 문자
+LOC -> VARCHAR2(13) -> 13개 문자
+이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ GRADE                                              NUMBER
+ LOSAL                                              NUMBER
+ HISAL                                              NUMBER
+
+SQL SELECT문
+데이터 베이스에서 정보를 검색하는데 사용되는 코드
+1.SELECT절 : SELECT문의 시작을 담당. 어떤 열을 반환할 건지 지정한다. SELECT*:모든 열
+2.FROM절 : 어떤 테이블에서 데이터를 검색할 것인지 지정, 마지막을 담당
+3.WHERE절 : 특정 조건을 만족하는 행을 선택하도록 필터링
+4.ORDER BY절 : 정렬 순서 지정
+5.GROUP BY절 : 특정 열에 따라서 그룹화
+6.HAVING절 : GROUP BY 친구, 같이 써야 한다. GROUP BY에서 추가 필터링 할 수 있도록 도와준다.
+
+Select절
+  select column1, column2, column3, ... , columnN
+  해당 column 반환하고자 하는 테이블 열의 이름이다.
+
+from절
+  from table1, table2, table3, ...
+  해당 table내에서 데이터를 검색하고자 한다.
+
+select *
+from table1, table2
+
+select table1.columnN, talble2.columnN->테이블은 객체다
+from table1, table2
+
+distinct 키워드
+  중복된 결과를 제거하고 고유한(unique) 결과만을 반환하는데 사용된다.
+  select절에서 column앞에 작성한다.
+  select distinct column1, column2, ..., columnN
+
+order by절
+  특정 열 또는 여러 열에 따라서 정렬해준다.
+  기본적으로 오름차순(ASC), 내림차순(DESC)을 사용하려면 DESC 키워드를 사용해야 한다.
+  select column1, column2, ..., columnN
+  from table
+  order by column1 asc, column2 desc, ..., columnN asc
+  순서대로, comlumn1 기준 정렬, column2 기준 ... 동일한 앞의 값에 대해 뒤의 조건으로 정렬한다.
+
+  직원 이름 순서대로 정렬해서 부서코드랑 같이 출력
+
+where 절
+  필터링 -> 조건식 -> 만족하는 행만이 결과에 포함된다.
+  select column1, column2, ..., columnN
+  from table
+  order by condition;
+
+select *
+from table
+where age>30 and age<50;
+
+group by절
+  보통 집계함수와 함께 사용되어 그룹화하거나 계산해주는데 사용된다.
+  select column1, column2, ..., function(columnN)
+  from table
+  group by column1, column2, ...;
+  column1, column2 해당 열에서 columnN열을 function 계산을 한다.
+
+  select id,  ..., avg(salary)
+  from table
+  group by id, name;
+  테이블에서 각 id, name의 평균 급여를 계산하는 쿼리다.
+  where절 이후에 위치하고, order by절 뒤에 위치한다.
+  where
+  group by
+  order by
+
+부서별 직급별로 평균 급여를 계산
+
+비교연산자
+>,<,<=,>=,=,!=
+! - NOT 연산자, AND, OR
+between ... and ... : 특정 범위 내에 있는 값 선택
+1<a<100 -> where a between 1 and 100;
+IN->where a in ('개발','디자인', '영업')
+like : 문자열 패턴 매칭 %와 같이 사용한다.
+%는 임의의 문자열을 대체하고, _는 임의의 한개 문자를 대체한다.
+_A% -> 두 번째 글자가 A인 모든 값
+where name like '_A%'
+
+is null, is not null : null인지 아닌지 판단
+
+having절
+  group by 추가 필터링
+  select column1, column2, ..., function(columnN)
+  from table
+  group by column1, column2
+  having condition;
+
+연산 기법
+1. 셀렉션(selection)
+  특정 조건을 만족하는 행을 선택하는 연산
+  SQL에서는 where절을 사용해서 셀렉션을 한다.
+2. 프로젝션(projection)
+  특정 열만 선택하는 연산
+  select column1, column2,...
+3. 조인(join)
+  여러 개의 테이블에서 관련있는 데이터를 결합하는 연산
+  join ... on ...
+  ex)select emp.first_name, emp.last_name, dept.deptname
+     from emp
+     join dept on emp.id = dept.id;
+
+부서 번호가 20이거나 직업이 salesman인 사원 정보 출력
+직업이 'manager', 'salesman', 'clerk' 들이 아닌 사원 정보 출력
+직업에 'A'가 들어간 사원 정보 출력
+추가수당이 없는 사원 정보 출력
+지역이 NEW YORK이고 'salesman'인 사원 정보 출력
+
+

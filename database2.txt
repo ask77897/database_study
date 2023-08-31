@@ -1,0 +1,181 @@
+자료형
+char(n) -> n만큼의 문자열(메모리 공간 고정)
+varchar(n), varchar2(n) ->n만큼의 문자열(메모리 공간 가변) (두 개의 차이가 없다. 대부분 varchar2를 쓴다)
+number(a,b) -> a = 전체(소수점 아래 포함) 몇자리 수인지, b = 소수점 아래 몇자리 까지 나타낼지
+date -> 날짜형식 세기, 연, 월, 일, 시, 분, 초
+blob - 2진 데이터
+clob - 대용량 텍스트
+bfile - 파일
+
+집합 연산자
+1. union
+   두 개의 select문 결과를 결합한다. 중복된 행을 제거
+   조건 : select문에서 동일한 수의 열을 가져야하고, 유사한 데이터 타입을 가져야 한다.
+   select column1 from table1
+   union
+   select column2 from table2
+
+사원 번호, 이름, 직급, 급여, 부서 번호출력 (부서번호20, 급여 2000이상/부서번호 30, 급여 2000이상)
+
+2. union all
+   두 개의 select문 결과를 결합한다. 중복된 행을 제거 x
+   select column1 from table1
+   union all
+   select column2 from table2
+
+3. intersect
+   두 개의 select문의 결과 중 공통된 행만 반환한다.
+   select column1 from table1
+   intersect
+   select column2 from table2
+
+4. exept(일부minus)
+   첫 번째 select문의 결과에서 두 번째 select문의 결과에 있는 행들을 제외하고 나머지를 반환한다.
+   select column1 from table1
+   except(일부 minus)
+   select column2 from table2
+
+
+문자 함수
+concat(str1, str2) : 문자열 두개 연결
+length(str) : 문자열 길이 반환
+lower(str) : 문자열 소문자로 반환
+upper(str) : 문자열 대문자로 반환
+substr(str, start, length) : 문자열 start부터 자르는데 length개 자른다.
+		        substr('substring', 2, 4) -> ubst
+replace(str, str_to_replace, replace_str) : 문자열에서 str_to_replace라는 문자열을 replace_str으로 바꿔준다.
+instr(str, substring, start, n) : 문자열에서 substring 이라는 문자가 어디있는지 찾는다.
+			start : 찾기 시작할 위치, n : 몇 번째
+trim([leading|trailing|both] char from str) : 문자열에서 char를 양쪽에서 제거해준다.
+				     leading:앞쪽
+				     trailing:뒤쪽
+				     both:양쪽
+lpad, rpad(str, length,char) : 문자열을 length만큼 채워준다. 남는 부분은 char를 채워준다.
+			lpad('Oracle", 10, '#') : ####Oracle
+			rpad('Oracle", 10, '#') : Oracle####
+
+숫자 함수
+abs(n) : 절대값 반환
+ceil(n) : 올림한 정수
+floor(n) : 내림한 정수
+round(n,m) : 소수점 자리 m 번째에서 반올림
+mod(n1, n2) : n1을 n2로 나눈 나머지를 반환한다.
+power(n1, n2) : n1을 n2만큼 제곱한다.
+sqrt(n) : 제곱근 반환
+exp(n) : 자연로그 제곱근 반환
+ln(n), log(10, n) : 로그 값 계산
+sin, cos, tan(n) : 삼각함수 값 반환 
+
+날짜 함수
+sysdate : 현재 시스템 날짜와 시간을 반환
+current_date : 현재 날짜와 시간을 반환
+extract(field from source) : source에서 field(year, month, day 등)을 추출해서 반환한다.
+to_date(str, format) : 문자열을 format(YYYY/MM/DD, DD/MM/YYYY, ...등)형식으로 data형으로 반환한다.
+to_char(date, format) : 날짜값을 format형식 문자열로 반환한다.
+add_months(date, interger) : 날짜값에 interger만큼 개월을 더해서 반환한다.
+months_between(date1, date2) : date1, date2 사이 개월 수를 반환한다.
+last_day(date) : 해당 일자가 속한 달의 마지막 날짜를 반환
+next_day(date, day_of_week) : 입력한 일자 다음에 오늘 요일을 반환해준다.
+
+
+형 변환 함수
+to_char : 숫자 또는 날짜를 문자로 반환한다.
+select to_char(12345) from dual;
+selsect to_char(sysdate, 'YYYY/MM/DD') from dual;
+
+to_number : 문자열을 숫자로 반환
+select to_number('12345') from dual
+
+to_date : 문자열을 숫자로 반환
+to_timestamp : 문자열을 timestamp값으로 반환 2023-08-30 오후02:41:32
+select to_timestamp('2023-08-30 오후02:41:32', 'YYYY/MM/DD HH24:MI:SS') from dual;
+
+cast : 한 데이터 타입을 다른 데이터 타입으로 변경
+select cast(column as datatype(length)) from table
+
+오라클에서는 암묵적으로 형변환이 가능하다. 근데 원하는 결과가 나오지 않을 수 있으니 명시적 형변환이 권장된다.
+
+null 함수 - null값을 처리하는 함수
+nvl(값1, 값2) - 값1 null이면 값2를 반환하고, 아니면 값1 을 반환
+nvl2(값1, 값2, 값3) - 값1이 null이면 값3를 반환하고, 아니면 값2를 반환한다.
+coalesce(값1, 값2, 값3, ...) : 모든 값이 null일 경우 null을 반환, not null인 첫 번째 값을 반환한다.
+nullif(exp1, exp2) : 두 값이 같으면 null 아니면 exp1을 반환한다.
+decode(값 또는 열, if 값 또는 조건식 = a then b, if 값 또는 조건식 = c then d, if 값 또는 조건식 = e then f, ...)
+
+집계 함수(Aggregation Function), 그룹 함수, 다중행 함수
+count(*) : 테이블의 행 갯수를 반환
+sum(column) : 해당 column의 모든 값의 합계를 반환
+avg(column) : 해당 column의 모든 값의 평균을 반환
+max(column) : 해당 column의 모든 값의 큰 값을 반환
+min(column) : 해당 column의 모든 값의 작은 값을 반환
+그룹함수는 그룹단위로 작업을 한다. 집계된 결과를 반환하는 함수.
+그룹함수는 여러 행을 하나의 결과로 집계하여 정보를 나타내는 함수.
+select문에서 사용이 되며 단일 작업을 해야하는 요소들과 함께 사용할 수 없다.
+
+group_concat, listagg : 특정 그룹에 한 개 이상의 연결된 문자열을 생성하고 싶을 때
+job에서 어떤 직업들이 있어? SALESMAN, CLERK, MANAGER, ...
+group_concat(job seperator ',')
+stddev, variance : 표준 편차와 분산 결과를 반환
+
+case문 
+조건에 따라 다른 동작을 수행하거나 반환한다.
+when 조건 then 결과
+
+select ename
+case
+when dept = 'IT' then 'IT department'
+when dept = 'SALES' then 'SALES department'
+else 'other department'
+end as department, sal
+from emp;
+
+고급 그룹화 연산 함수
+group by를 도와주는 함수들(having이랑 같은 포지션) 
+1. rollup
+   group by 절에 지정된 열 목록에 대해서 서브 그룹, 각 열에 대한 합계를 생성해준다.
+   select deptno, job, sum(sal)
+   from emp
+   group by (deptno, job)
+   ->deptno & job 기준으로 합계 생성
+
+   select deptno, job, sum(sal)
+   from emp
+   group by rollup(deptno, job)
+   ->deptno & job 기준 합계, 전체 그룹, deptno 그룹 합계
+   
+2. cube
+   group by 절에 지정된 열 목록에 대해서 서브 그룹, 각 열에 대한 합계를 생성해준다.
+   다차원 분석 쿼리에 유리하다.
+   select deptno, job, sum(sal)
+   from emp
+   group by cube(deptno, job)
+   ->deptno & job 기준 합계, 전체 그룹, deptno, job 그룹 합계
+
+3. grouping sets
+   group by 절에 지정된 열 목록에 대해서 서브 그룹, 각 열에 대한 합계를 생성해준다.
+   복잡한 그룹화에서 사용된다.
+   select deptno, job, sum(sal)
+   from emp
+   group by grouping sets((deptno), (job))
+
+grouping
+직접적으로 합계를 생성해주는 함수는 아니고, 위의 그룹함수들을 도와주는 함수다.
+select deptno, job, sum(sal), grouping(deptno), grouping(job)
+from emp
+group by cube(deptno, job)
+
+집계된 결과에 대해서 1의 갑을 가지고, 그렇지 않은 값에 대해서 0의 값을 가진다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
